@@ -17,16 +17,22 @@ class AutomovilesDatabase:
                                 marca_id INTEGER,
                                 FOREIGN KEY (marca_id) REFERENCES Marca(id)
                             )''')
-
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS Transmision (
+        
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS Vehiculos (
                                 id INTEGER PRIMARY KEY,
-                                tipo TEXT NOT NULL
+                                modelo_id INTEGER,
+                                transmision TEXT,
+                                combustible TEXT,
+                                FOREIGN KEY (modelo_id) REFERENCES Modelo(id)
+                            )''')
+        
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS Usuarios (
+                                id INTEGER PRIMARY KEY,
+                                nombre TEXT NOT NULL,
+                                vehiculo_id INTEGER,
+                                FOREIGN KEY (vehiculo_id) REFERENCES Vehiculos(id)
                             )''')
 
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS TipoCombustible (
-                                id INTEGER PRIMARY KEY,
-                                tipo TEXT NOT NULL
-                            )''')
 
         self.connection.commit()
 
@@ -59,21 +65,42 @@ class AutomovilesDatabase:
         self.cursor.execute("INSERT INTO Modelo (nombre, marca_id) VALUES (?, ?)", (nombre, marca_id))
         self.connection.commit()
 
-    def get_marcas(self):
-        self.cursor.execute("SELECT nombre FROM Marca")
-        return [marca[0] for marca in self.cursor.fetchall()]
-
-    def get_modelos_por_marca(self, marca):
+    def insert_vehiculo(self, modelo_id, transmision, combustible):
         connection = sqlite3.connect("automoviles.db")
         cursor = connection.cursor()
 
-        cursor.execute("SELECT Modelo.nombre FROM Modelo INNER JOIN Marca ON Modelo.marca_id = Marca.id WHERE Marca.nombre = ?", (marca,))
+        cursor.execute("INSERT INTO Vehiculos (modelo_id, transmision, combustible) VALUES (?, ?, ?)", (modelo_id, transmision, combustible))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+        return cursor.lastrowid  # Devolver el ID de la marca insertada
+
+    def insert_usuario(self, nombre, vehiculo_id):
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("INSERT INTO Usuarios (nombre, vehiculo_id) VALUES (?, ?)", (nombre, vehiculo_id))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
+    def get_marcas(self):
+        self.cursor.execute("SELECT id, nombre FROM Marca")
+        return self.cursor.fetchall()
+
+    def get_modelos_por_marca(self, marca_id):
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT id, nombre FROM Modelo WHERE marca_id = ?", (marca_id,))
         modelos = cursor.fetchall()
 
         cursor.close()
         connection.close()
 
-        return [modelo[0] for modelo in modelos]
+        return modelos
 
     def close_connection(self):
         self.connection.close()
