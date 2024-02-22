@@ -55,6 +55,21 @@ class AutomovilesDatabase:
             for marca, modelos_list in modelos.items():
                 for modelo in modelos_list:
                     self.insert_modelo(modelo, marcas_ids[marca])
+
+    def verify_user(self):
+        # Verificar si las tablas están vacías
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM Usuarios")
+        count = cursor.fetchone()[0]
+
+        cursor.close()
+        connection.close()
+        
+        if count > 0:
+            return True
+        return False
     
     def insert_marca(self, nombre):
         self.cursor.execute("INSERT INTO Marca (nombre) VALUES (?)", (nombre,))
