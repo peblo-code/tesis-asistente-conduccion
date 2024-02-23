@@ -17,7 +17,7 @@ def menu(page: ft.Page):
                 ),
                 ft.Text(subtitleText, 
                     theme_style=ft.TextThemeStyle.LABEL_LARGE,
-                    color=ft.colors.INDIGO_200    
+                    color=ft.colors.INDIGO_200
                 ),
             ], alignment = ft.MainAxisAlignment.CENTER, spacing=0.5)
         ])
