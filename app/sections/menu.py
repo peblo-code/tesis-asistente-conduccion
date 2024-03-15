@@ -1,6 +1,8 @@
 import flet as ft
+import obd
 from sections.formVehicle import formVehicle
 from database import AutomovilesDatabase
+from functions.obdConnection import tryConnection
 
 def menu(page: ft.Page):
     page.title = "Menu principal"
@@ -54,6 +56,14 @@ def menu(page: ft.Page):
 
 
     def column_with_alignment(align: ft.MainAxisAlignment):
+        obdData = ["-","-","-","-"]
+        if tryConnection():
+            connection = tryConnection()
+            speedValue = connection.query(obd.commands.SPEED).value
+            rpmValue = connection.query(obd.commands.RPM).value
+            coolantValue = connection.query(obd.commands.COOLANT_TEMP).value
+            fuelRateValue = connection.query(obd.commands.FUEL_RATE).value
+            obdData = [speedValue, rpmValue, coolantValue, fuelRateValue]
         return ft.Row(
             [
                 ft.Container(
@@ -62,10 +72,10 @@ def menu(page: ft.Page):
                             theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
                             text_align="CENTER"
                         ),
-                        itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", "80"), 
-                        itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", "2350"),
-                        itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", "87"),
-                        itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", "5.2"),
+                        itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
+                        itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
+                        itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
+                        itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", obdData[3]),
                     ], spacing=1),
                 ),
             ], alignment=align,
