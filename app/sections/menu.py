@@ -1,12 +1,20 @@
 import flet as ft
 import obd
-from sections.formVehicle import formVehicle
 from database import AutomovilesDatabase
 from functions.obdConnection import tryConnection
 
 def menu(page: ft.Page):
     page.title = "Menu principal"
     page.scroll = "adaptive"
+
+    # Crear instancia de la base de datos
+    db = AutomovilesDatabase("automoviles.db")
+
+    transmision = db.obtener_transmision_por_id_vehiculo(1)
+    print(transmision)
+
+    # Cerrar conexión
+    db.close_connection()
 
     def itemCard(icon, titleText, subtitleText, dataText):
 
@@ -53,10 +61,16 @@ def menu(page: ft.Page):
         
         return card
 
-
-
     def column_with_alignment(align: ft.MainAxisAlignment):
         obdData = ["-","-","-","-"]
+        listaItemCard = [
+            itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
+            itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
+            itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
+            itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", obdData[3]),
+        ]
+        if transmision == "1":
+            listaItemCard.append(itemCard(ft.icons.ALBUM_OUTLINED, "Marcha", "Subir/Bajar", "↑"))
         if tryConnection():
             connection = tryConnection()
             speedValue = connection.query(obd.commands.SPEED).value
@@ -72,21 +86,10 @@ def menu(page: ft.Page):
                             theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
                             text_align="CENTER"
                         ),
-                        itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
-                        itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
-                        itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
-                        itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", obdData[3]),
+                        *listaItemCard
                     ], spacing=1),
                 ),
             ], alignment=align,
         )
 
-    # Crear instancia de la base de datos
-    db = AutomovilesDatabase("automoviles.db")
-
-    # Cerrar conexión
-    db.close_connection()
-
-    page.add(
-        column_with_alignment(ft.MainAxisAlignment.CENTER),
-    )
+    return column_with_alignment(ft.MainAxisAlignment.CENTER)

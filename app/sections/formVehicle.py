@@ -1,5 +1,5 @@
 import flet as ft
-import sqlite3
+from sections.menu import menu
 from database import AutomovilesDatabase
 
 def formVehicle(page: ft.Page):
@@ -20,7 +20,8 @@ def formVehicle(page: ft.Page):
         usuario = username.value
         vehiculo = db.insert_vehiculo(automovil.modelo, automovil.transmision, automovil.combustible)
         db.insert_usuario(usuario, vehiculo)
-        output_text.value = f"El nombre de usuario es: {usuario}\nLa marca es: {automovil.marca}\nEl modelo es: {automovil.modelo}\nLa transmision es: {automovil.transmision}\nEl combustible es: {automovil.combustible}"
+        #output_text.value = f"El nombre de usuario es: {usuario}\nLa marca es: {automovil.marca}\nEl modelo es: {automovil.modelo}\nLa transmision es: {automovil.transmision}\nEl combustible es: {automovil.combustible}"
+        page.go("/")
         page.update()
     
     # Función para cargar los modelos según la marca seleccionada
@@ -30,7 +31,7 @@ def formVehicle(page: ft.Page):
         modelo_dropdown.options = [ft.dropdown.Option(key=id_modelo, text=modelo) for id_modelo, modelo in modelos]
         page.update()
 
-    output_text = ft.Text()
+    #output_text = ft.Text()
     submit_btn = ft.ElevatedButton(text="Guardar", on_click=button_clicked)
 
     username = ft.TextField(
@@ -68,7 +69,7 @@ def formVehicle(page: ft.Page):
     
     # Cerrar conexión
     db.close_connection()
-    page.add(
+    return [
         ft.Text("Datos del Vehiculo", 
             theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
             text_align="CENTER",
@@ -79,5 +80,5 @@ def formVehicle(page: ft.Page):
         transmision_dropdown, 
         combustible_dropdown, 
         submit_btn, 
-        output_text
-    )
+        #output_text
+    ]

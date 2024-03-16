@@ -116,6 +116,15 @@ class AutomovilesDatabase:
         connection.close()
 
         return modelos
+    
+    def obtener_transmision_por_id_vehiculo(self, vehiculo_id):
+        self.cursor.execute("SELECT transmision FROM Vehiculos WHERE id = ?", (vehiculo_id,))
+        transmision = self.cursor.fetchone()
+        if transmision:
+            return transmision[0]
+        else:
+            return None
+
 
     def close_connection(self):
         self.connection.close()
