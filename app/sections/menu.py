@@ -70,7 +70,8 @@ def menu(page: ft.Page):
                     ft.Container(
                         content=ft.Text(
                             dataText, 
-                            weight=ft.FontWeight.BOLD, 
+                            weight=ft.FontWeight.BOLD,
+                            text_align="CENTER",
                             theme_style=ft.TextThemeStyle.TITLE_LARGE,
                         ),
                         bgcolor=ft.colors.INDIGO_800, 
@@ -123,6 +124,8 @@ def menu(page: ft.Page):
                 page.views.append(new_view)
                 page.update()
 
+                if not connection:
+                    break
                 # Esperar 0.5 segundos antes de la próxima actualización
                 time.sleep(.5)
 
