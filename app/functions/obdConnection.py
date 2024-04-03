@@ -10,6 +10,6 @@ def tryConnection():
         else:
             print("No se encontraron puertos seriales disponibles.")
             return None
-    except obd.OBDException as e:
+    except Exception as e:
         print("Error al conectar con OBD:", e)
         return None
