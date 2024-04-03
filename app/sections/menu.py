@@ -91,49 +91,46 @@ def menu(page: ft.Page):
         
         return card
 
-    def column_with_alignment(align: ft.MainAxisAlignment):
-        # Función para crear y actualizar las tarjetas
-        def create_and_update_cards():
-            while True:
-                print(obdData)
-                # Actualizar los datos OBD
-                listaItemCard = [
-                    itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
-                    itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
-                    itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
-                    itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", obdData[3]),
-                ]
-                if transmision == "1":
-                    listaItemCard.append(itemCard(ft.icons.ALBUM_OUTLINED, "Marcha", "Subir/Bajar", obdData[4]))
 
-                # Crear una nueva vista con las tarjetas actualizadas
-                new_view = ft.View("/", [
-                    ft.Container(
-                        content=ft.Column([
-                            ft.Text("Datos", 
-                                theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
-                                text_align="CENTER"
-                            ),
-                            *listaItemCard
-                        ], spacing=1),
-                    ),
-                ])
+    def create_and_update_cards():
+        while True:
+            print(obdData)
+            # Actualizar los datos OBD
+            listaItemCard = [
+                itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
+                itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
+                itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
+                itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", obdData[3]),
+            ]
+            if transmision == "1":
+                listaItemCard.append(itemCard(ft.icons.ALBUM_OUTLINED, "Marcha", "Subir/Bajar", obdData[4]))
 
-                # Actualizar la vista en la página
-                page.views.clear()
-                page.views.append(new_view)
-                page.update()
+            # Crear una nueva vista con las tarjetas actualizadas
+            new_view = ft.View("/", [
+                ft.Container(
+                    content=ft.Column([
+                        ft.Text("Datos", 
+                            theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
+                            text_align="CENTER"
+                        ),
+                        *listaItemCard
+                    ], spacing=1),
+                ),
+            ])
 
-                if not connection:
-                    break
-                # Esperar 0.5 segundos antes de la próxima actualización
-                time.sleep(.5)
+            # Actualizar la vista en la página
+            page.views.clear()
+            page.views.append(new_view)
+            page.update()
 
-        # Iniciar el hilo para crear y actualizar las tarjetas
-        threading.Thread(target=create_and_update_cards, daemon=True).start()
+            if connection is None:
+                break
 
-        # Devolver una vista vacía inicialmente
-        return ft.View("/")
+            # Esperar 0.5 segundos antes de la próxima actualización
+            time.sleep(.5)
 
-    # Devolver la función para crear y actualizar las tarjetas
-    return column_with_alignment(ft.MainAxisAlignment.CENTER)
+    # Iniciar el hilo para crear y actualizar las tarjetas
+    threading.Thread(target=create_and_update_cards, daemon=True).start()
+
+    # Devolver una vista vacía inicialmente
+    return ft.View("/")
