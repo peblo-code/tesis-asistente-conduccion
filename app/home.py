@@ -5,9 +5,15 @@ def home(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def card(card_text):
+    def card(card_text, icon_name):
         return ft.Container(
-            content=ft.Text(card_text),
+            content=ft.Column([
+                ft.Text(card_text, theme_style=ft.TextThemeStyle.TITLE_LARGE),
+                ft.Icon(name=icon_name, color=ft.colors.GREY_400, size=100),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=10,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER),
             margin=5,
             padding=10,
             alignment=ft.alignment.center,
@@ -20,25 +26,20 @@ def home(page: ft.Page):
             ink=True,
             on_click=lambda e: print("Clickable with Ink clicked!"),
         )
-
-    page.add(
-        ft.Container(
+    
+    view = ft.Container(
             content = ft.Column([
                 ft.Row([
-                    card("Conducir"),
-                    card("Logs")
+                    card("Conducir", ft.icons.PLAY_ARROW),
+                    card("Logs", ft.icons.NOTES)
                 ]),
                 ft.Row([
-                    card("Vehiculos"),
-                    card("Ajustes")
+                    card("Vehiculos", ft.icons.DRIVE_ETA),
+                    card("Ajustes", ft.icons.SETTINGS)
                 ])
             ]),
             alignment = ft.alignment.center,
             width=page.width
-        ),
-        
-    )
+        )
 
-
-
-ft.app(target=home)
+    return view

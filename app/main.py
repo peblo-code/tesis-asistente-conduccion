@@ -1,9 +1,12 @@
 import flet as ft
 from sections.formVehicle import formVehicle
 from sections.menu import menu
+from home import home
 from database import AutomovilesDatabase
 
 def main(page: ft.Page):
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     # Crear instancia de la base de datos
     db = AutomovilesDatabase("automoviles.db")
 
@@ -18,8 +21,11 @@ def main(page: ft.Page):
             ft.View(
                 "/",
                 [
-                    menu(page)
+                    ft.Text("Inicio", theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM),
+                    home(page),
                 ],
+                vertical_alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER
             )
         )
         if page.route == "/formVehicle":
