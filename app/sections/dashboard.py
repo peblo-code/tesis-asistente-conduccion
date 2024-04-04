@@ -6,7 +6,7 @@ from database import AutomovilesDatabase
 from functions.obdConnection import tryConnection
 from functions.shift import checkShift
 
-def menu(page: ft.Page):
+def dashboard(page: ft.Page):
     page.title = "Menu principal"
     page.scroll = "adaptive"
 
@@ -106,7 +106,7 @@ def menu(page: ft.Page):
                 listaItemCard.append(itemCard(ft.icons.ALBUM_OUTLINED, "Marcha", "Subir/Bajar", obdData[4]))
 
             # Crear una nueva vista con las tarjetas actualizadas
-            new_view = ft.View("/", [
+            new_view = ft.View("/dashboard", [
                 ft.Container(
                     content=ft.Column([
                         ft.Text("Datos", 
@@ -133,4 +133,4 @@ def menu(page: ft.Page):
     threading.Thread(target=create_and_update_cards, daemon=True).start()
 
     # Devolver una vista vacía inicialmente
-    return ft.View("/")
+    return ft.View("/dashboard")

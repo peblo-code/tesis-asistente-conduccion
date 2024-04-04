@@ -1,5 +1,4 @@
 import flet as ft
-from sections.menu import menu
 from database import AutomovilesDatabase
 
 def formVehicle(page: ft.Page):

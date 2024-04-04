@@ -24,7 +24,7 @@ def home(page: ft.Page):
             height=page.height/3,
             border_radius=10,
             ink=True,
-            on_click=lambda e: print("Clickable with Ink clicked!"),
+            on_click=lambda e: page.go("/dashboard"),
         )
     
     view = ft.Container(

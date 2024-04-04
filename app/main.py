@@ -1,6 +1,6 @@
 import flet as ft
 from sections.formVehicle import formVehicle
-from sections.menu import menu
+from sections.dashboard import dashboard
 from home import home
 from database import AutomovilesDatabase
 
@@ -32,7 +32,16 @@ def main(page: ft.Page):
             page.views.append(
                 ft.View(
                     "/formVehicle",
-                    formVehicle(page),
+                    formVehicle(page)
+                )
+            )
+        if page.route == "/dashboard":
+            page.views.append(
+                ft.View(
+                    "/dashboard",
+                    [
+                        dashboard(page)
+                    ]
                 )
             )
         page.update()
