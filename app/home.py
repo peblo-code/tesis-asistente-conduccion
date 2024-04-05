@@ -5,7 +5,7 @@ def home(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def card(card_text, icon_name):
+    def card(card_text, icon_name, navigateTo):
         return ft.Container(
             content=ft.Column([
                 ft.Text(card_text, theme_style=ft.TextThemeStyle.TITLE_LARGE),
@@ -24,18 +24,18 @@ def home(page: ft.Page):
             height=page.height/3,
             border_radius=10,
             ink=True,
-            on_click=lambda e: page.go("/dashboard"),
+            on_click=lambda e: page.go(navigateTo),
         )
     
     view = ft.Container(
             content = ft.Column([
                 ft.Row([
-                    card("Conducir", ft.icons.PLAY_ARROW),
-                    card("Logs", ft.icons.NOTES)
+                    card("Conducir", ft.icons.PLAY_ARROW, "/dashboard"),
+                    card("Logs", ft.icons.NOTES, "/dashboard")
                 ]),
                 ft.Row([
-                    card("Vehiculos", ft.icons.DRIVE_ETA),
-                    card("Ajustes", ft.icons.SETTINGS)
+                    card("Vehiculos", ft.icons.DRIVE_ETA, "/addVehicleForm"),
+                    card("Ajustes", ft.icons.SETTINGS, "/dashboard")
                 ])
             ]),
             alignment = ft.alignment.center,
