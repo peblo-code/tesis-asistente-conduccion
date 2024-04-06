@@ -52,7 +52,8 @@ def main(page: ft.Page):
                     "/addVehicleForm",
                     [
                         addVehicleForm(page)
-                    ]
+                    ],
+                scroll=ft.ScrollMode.ALWAYS
                 )
             )
         page.update()

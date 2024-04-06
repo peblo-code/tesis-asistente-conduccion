@@ -124,6 +124,21 @@ class AutomovilesDatabase:
             return transmision[0]
         else:
             return None
+        
+    def obtener_vehiculos_registrados():
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        # Consulta para obtener todos los vehículos
+        cursor.execute("SELECT Vehiculos.id, Modelo.nombre, Marca.nombre, Vehiculos.transmision, Vehiculos.combustible FROM Vehiculos INNER JOIN Modelo ON Vehiculos.modelo_id = Modelo.id INNER JOIN Marca ON Modelo.marca_id = Marca.id")
+
+        vehiculos = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return vehiculos
+
 
 
     def close_connection(self):
