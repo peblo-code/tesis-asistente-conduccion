@@ -34,7 +34,7 @@ def home(page: ft.Page):
                     card("Logs", ft.icons.NOTES, "/dashboard")
                 ]),
                 ft.Row([
-                    card("Vehiculos", ft.icons.DRIVE_ETA, "/addVehicleForm"),
+                    card("Vehiculos", ft.icons.DRIVE_ETA, "/vehicleList"),
                     card("Ajustes", ft.icons.SETTINGS, "/dashboard")
                 ])
             ]),

@@ -1,7 +1,7 @@
 import flet as ft
 from sections.formVehicle import formVehicle
 from sections.dashboard import dashboard
-from sections.addVehicleForm import addVehicleForm
+from sections.vehicleList import vehicleList
 from home import home
 from database import AutomovilesDatabase
 
@@ -42,16 +42,18 @@ def main(page: ft.Page):
                     "/dashboard",
                     [
                         dashboard(page)
-                    ]
+                    ],
+                    vertical_alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 )
             )
 
-        if page.route == "/addVehicleForm":
+        if page.route == "/vehicleList":
             page.views.append(
                 ft.View(
-                    "/addVehicleForm",
+                    "/vehicleList",
                     [
-                        addVehicleForm(page)
+                        vehicleList(page)
                     ],
                 scroll=ft.ScrollMode.ALWAYS
                 )
