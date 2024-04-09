@@ -43,6 +43,7 @@ def main(page: ft.Page):
                     [
                         dashboard(page)
                     ],
+                    scroll=ft.ScrollMode.ALWAYS,
                     vertical_alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 )

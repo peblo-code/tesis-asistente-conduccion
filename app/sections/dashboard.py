@@ -79,7 +79,7 @@ def dashboard(page: ft.Page):
                         width=80,
                         height=50,
                     )
-                ])
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
             ),
             margin=10,
             padding=15,
@@ -109,12 +109,17 @@ def dashboard(page: ft.Page):
             new_view = ft.View("/dashboard", [
                 ft.Container(
                     content=ft.Column([
+                         ft.Container(
+                            content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
+                            on_click=lambda e: page.go("/home")
+                        ),
                         ft.Text("Datos", 
                             theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
-                            text_align="CENTER"
+                            text_align=ft.TextAlign.CENTER
                         ),
                         *listaItemCard
                     ], spacing=1),
+                    alignment=ft.alignment.center
                 ),
             ])
 

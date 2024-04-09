@@ -61,10 +61,16 @@ def vehicleList(page: ft.Page):
         cards.append(card(vehiculo[2] + " " + vehiculo[1], vehiculo[3], vehiculo[4]))
     cards.append(card_add)
     
-    view = ft.Container(
-            content=ft.Column(cards),
-            alignment = ft.alignment.center,
-            width=page.width,
-        )
+    view = ft.Column([
+            ft.Container(
+                content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
+                on_click=lambda e: page.go("/home")
+            ),
+            ft.Container(
+                content=ft.Column(cards),
+                alignment = ft.alignment.center,
+                width=page.width,
+            )
+        ])
     
     return view
