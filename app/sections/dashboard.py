@@ -111,17 +111,18 @@ def dashboard(page: ft.Page):
                     content=ft.Column([
                          ft.Container(
                             content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
-                            on_click=lambda e: page.go("/home")
+                            on_click=lambda e: page.go("/")
                         ),
-                        ft.Text("Datos", 
-                            theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
-                            text_align=ft.TextAlign.CENTER
-                        ),
-                        *listaItemCard
-                    ], spacing=1),
-                    alignment=ft.alignment.center
+                        ft.Container(
+                            content=ft.Column([
+                                ft.Text("Datos", theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM, text_align=ft.TextAlign.CENTER),
+                                *listaItemCard
+                            ], spacing=1, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                            alignment=ft.alignment.center
+                        )
+                    ],)
                 ),
-            ])
+            ], scroll=ft.ScrollMode.ALWAYS,)
 
             # Actualizar la vista en la página
             page.views.clear()
