@@ -90,6 +90,17 @@ class AutomovilesDatabase:
         cursor.close()
         connection.close()
         return cursor.lastrowid  # Devolver el ID de la marca insertada
+    
+    def editar_vehiculo_por_id(self, vehiculo_id, modelo_id, transmision, combustible):
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("UPDATE Vehiculos SET modelo_id = ?, transmision = ?, combustible = ? WHERE id = ?", (modelo_id, transmision, combustible, vehiculo_id))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
 
     def insert_usuario(self, nombre, vehiculo_id):
         connection = sqlite3.connect("automoviles.db")
@@ -102,7 +113,13 @@ class AutomovilesDatabase:
         connection.close()
 
     def get_marcas(self):
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
         self.cursor.execute("SELECT id, nombre FROM Marca")
+    
+        cursor.close()
+        connection.close()
         return self.cursor.fetchall()
 
     def get_modelos_por_marca(self, marca_id):
@@ -124,8 +141,20 @@ class AutomovilesDatabase:
             return transmision[0]
         else:
             return None
+    
+    def obtener_vehiculo_por_id(self, vehiculo_id):
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * FROM Vehiculos WHERE id = ?", (vehiculo_id,))
+        vehiculo = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        return vehiculo
         
-    def obtener_vehiculos_registrados():
+    def obtener_vehiculos_registrados(self):
         connection = sqlite3.connect("automoviles.db")
         cursor = connection.cursor()
 
