@@ -72,13 +72,25 @@ class AutomovilesDatabase:
         return False
     
     def insert_marca(self, nombre):
-        self.cursor.execute("INSERT INTO Marca (nombre) VALUES (?)", (nombre,))
-        self.connection.commit()
-        return self.cursor.lastrowid  # Devolver el ID de la marca insertada
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("INSERT INTO Marca (nombre) VALUES (?)", (nombre,))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+        return cursor.lastrowid  # Devolver el ID de la marca insertada
 
     def insert_modelo(self, nombre, marca_id):
-        self.cursor.execute("INSERT INTO Modelo (nombre, marca_id) VALUES (?, ?)", (nombre, marca_id))
-        self.connection.commit()
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("INSERT INTO Modelo (nombre, marca_id) VALUES (?, ?)", (nombre, marca_id))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
 
     def insert_vehiculo(self, modelo_id, transmision, combustible):
         connection = sqlite3.connect("automoviles.db")
@@ -116,11 +128,12 @@ class AutomovilesDatabase:
         connection = sqlite3.connect("automoviles.db")
         cursor = connection.cursor()
 
-        self.cursor.execute("SELECT id, nombre FROM Marca")
+        cursor.execute("SELECT id, nombre FROM Marca")
+        response = cursor.fetchall()
     
         cursor.close()
         connection.close()
-        return self.cursor.fetchall()
+        return response
 
     def get_modelos_por_marca(self, marca_id):
         connection = sqlite3.connect("automoviles.db")
@@ -146,7 +159,12 @@ class AutomovilesDatabase:
         connection = sqlite3.connect("automoviles.db")
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * FROM Vehiculos WHERE id = ?", (vehiculo_id,))
+        cursor.execute("""
+        SELECT V.*, M.marca_id
+        FROM Vehiculos V
+        INNER JOIN Modelo M ON V.modelo_id = M.id
+        WHERE V.id = ?
+        """, (vehiculo_id,))
         vehiculo = cursor.fetchone()
 
         cursor.close()

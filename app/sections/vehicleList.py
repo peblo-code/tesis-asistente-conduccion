@@ -29,6 +29,7 @@ def vehicleList(page: ft.Page):
         
         def button_clicked(e):
             db.editar_vehiculo_por_id(car_id, modelo_dropdown.value, transmision_dropdown.value, combustible_dropdown.value)
+            cargar_vehiculos()
             page.update()
 
         display_view = ft.Row([
@@ -68,7 +69,7 @@ def vehicleList(page: ft.Page):
             label="Marca",
             autofocus=True,
             options=[ft.dropdown.Option(text=marca, key=id_marca) for id_marca, marca in db.get_marcas()],
-            value=car_selected[0]
+            value=car_selected[4]
         )
         modelo_dropdown = ft.Dropdown(
             width="100%",
@@ -81,7 +82,7 @@ def vehicleList(page: ft.Page):
             width="100%",
             label="Transmisión",
             options=[
-                ft.dropdown.Option(key=0, text="Automática"),
+                ft.dropdown.Option(key=0, text="Automático"),
                 ft.dropdown.Option(key=1, text="Manual"),
             ],
             value=int(car_selected[2])
@@ -145,11 +146,15 @@ def vehicleList(page: ft.Page):
         on_click=lambda e: page.go("/")
     )
 
-    vehiculos = db.obtener_vehiculos_registrados()
     cards=[]
-    for vehiculo in vehiculos:
-        cards.append(card(vehiculo[0], vehiculo[2] + " " + vehiculo[1], vehiculo[3], vehiculo[4]))
-    cards.append(card_add)
+
+    def cargar_vehiculos():
+        cards.clear()
+        vehiculos = db.obtener_vehiculos_registrados()
+        for vehiculo in vehiculos:
+            cards.append(card(vehiculo[0], vehiculo[2] + " " + vehiculo[1], vehiculo[3], vehiculo[4]))
+        cards.append(card_add)
+    cargar_vehiculos()
     
     view = ft.Column([
             ft.Container(
