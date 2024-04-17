@@ -21,8 +21,24 @@ def dashboard(page: ft.Page):
     # Variable global para almacenar los datos OBD
     obdData = ["-", "-", "-", "-", "-"]
 
+    connection = None
+
+
     # Intenta obtener la conexión OBD
+    loading_view = ft.View("/dashboard",
+        [ft.Column(
+            [ft.ProgressRing(), ft.Text("Estableciendo conexion con OBD2...")],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            alignment=ft.MainAxisAlignment.CENTER
+        )],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        vertical_alignment=ft.MainAxisAlignment.CENTER
+    )
+
+    page.views.append(loading_view)
+    page.update()
     connection = tryConnection()
+
 
     def update_data():
         nonlocal obdData
@@ -34,13 +50,13 @@ def dashboard(page: ft.Page):
             coolantValue = connection.query(obd.commands.COOLANT_TEMP).value.magnitude
             throttle = connection.query(obd.commands.THROTTLE_POS).value.magnitude
             engineLoad = connection.query(obd.commands.ENGINE_LOAD).value.magnitude
-            #fuelRateValue = connection.query(obd.commands.FUEL_RATE).value
+            elmVoltage = connection.query(obd.commands.ELM_VOLTAGE).value.magnitude
             def shiftValue():
                 if speedValue:
                     return checkShift(speedValue, rpmValue, throttle, engineLoad)
                 return "-"
             
-            obdData[:] = [speedValue, rpmValue, coolantValue, "-", shiftValue()]
+            obdData[:] = [speedValue, rpmValue, coolantValue, elmVoltage, shiftValue()]
 
         # Programa la próxima actualización después de 0.5 segundos
         threading.Timer(1, update_data).start()
@@ -100,7 +116,7 @@ def dashboard(page: ft.Page):
                 itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
                 itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
                 itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
-                itemCard(ft.icons.WATER_DROP_OUTLINED, "Consumo", "Litros por Hora", obdData[3]),
+                itemCard(ft.icons.WATER_DROP_OUTLINED, "Batería", "Voltaje de Batería", obdData[3]),
             ]
             if transmision == "1":
                 listaItemCard.append(itemCard(ft.icons.ALBUM_OUTLINED, "Marcha", "Subir/Bajar", obdData[4]))
