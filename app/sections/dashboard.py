@@ -64,6 +64,47 @@ def dashboard(page: ft.Page):
     # Llama a la función update_data para la primera actualización
     update_data()
 
+    def infoCard(dataText):
+        cardInformation = ft.Row([
+            ft.Icon(name=ft.icons.INFO, ),
+            ft.Column([
+                ft.Text("Información", 
+                    theme_style=ft.TextThemeStyle.TITLE_LARGE,
+                    weight=ft.FontWeight.BOLD,
+                    
+                ),
+
+            ], spacing=0.5)
+        ])
+
+        card = ft.Container(
+            content=(
+                ft.Column([
+                    cardInformation,
+                    ft.Container(
+                        content=ft.Text(
+                            dataText, 
+                            weight=ft.FontWeight.BOLD,
+                            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                            color=ft.colors.BLACK,
+                        ),
+                        bgcolor=ft.colors.WHITE70, 
+                        border_radius=10,
+                        width=300,
+                        padding=10,
+                    ),
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, alignment=ft.MainAxisAlignment.CENTER)
+            ),
+            margin=10,
+            padding=15,
+            bgcolor=ft.colors.GREEN_700,
+            width=350,
+            border_radius=10,
+        )
+
+        return card
+        
+
     def itemCard(icon, titleText, subtitleText, dataText):
         cardInformation = ft.Row([
             ft.Icon(icon),
@@ -113,6 +154,7 @@ def dashboard(page: ft.Page):
             print(obdData)
             # Actualizar los datos OBD
             listaItemCard = [
+                infoCard("El motor se encuentra frio, procure no exigirlo demasiado."),
                 itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
                 itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
                 itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),
