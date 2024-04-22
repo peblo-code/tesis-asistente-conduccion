@@ -28,9 +28,7 @@ class AutomovilesDatabase:
         
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS Usuarios (
                                 id INTEGER PRIMARY KEY,
-                                nombre TEXT NOT NULL,
-                                vehiculo_id INTEGER,
-                                FOREIGN KEY (vehiculo_id) REFERENCES Vehiculos(id)
+                                nombre TEXT NOT NULL
                             )''')
 
 
@@ -114,11 +112,11 @@ class AutomovilesDatabase:
         connection.close()
 
 
-    def insert_usuario(self, nombre, vehiculo_id):
+    def insert_usuario(self, nombre):
         connection = sqlite3.connect("automoviles.db")
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO Usuarios (nombre, vehiculo_id) VALUES (?, ?)", (nombre, vehiculo_id))
+        cursor.execute("INSERT INTO Usuarios (nombre) VALUES (?)", (nombre,))
         connection.commit()
 
         cursor.close()

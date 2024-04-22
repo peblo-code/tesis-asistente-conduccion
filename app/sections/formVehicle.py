@@ -6,6 +6,7 @@ def formVehicle(page: ft.Page):
     page.scroll = "adaptive"
     # Crear instancia de la base de datos
     db = AutomovilesDatabase("automoviles.db")
+    isFirstUser = db.verify_user()
 
     class Auto:
         def __init__(self, marca, modelo, transmision, combustible):
@@ -16,11 +17,12 @@ def formVehicle(page: ft.Page):
         
     def button_clicked(e):
         automovil = Auto(marca_dropdown.value, modelo_dropdown.value, transmision_dropdown.value, combustible_dropdown.value)
-        usuario = username.value
-        vehiculo = db.insert_vehiculo(automovil.modelo, automovil.transmision, automovil.combustible)
-        db.insert_usuario(usuario, vehiculo)
-        #output_text.value = f"El nombre de usuario es: {usuario}\nLa marca es: {automovil.marca}\nEl modelo es: {automovil.modelo}\nLa transmision es: {automovil.transmision}\nEl combustible es: {automovil.combustible}"
-        page.go("/")
+        db.insert_vehiculo(automovil.modelo, automovil.transmision, automovil.combustible)
+        if(isFirstUser):
+            db.insert_usuario(username.value)
+            #output_text.value = f"El nombre de usuario es: {usuario}\nLa marca es: {automovil.marca}\nEl modelo es: {automovil.modelo}\nLa transmision es: {automovil.transmision}\nEl combustible es: {automovil.combustible}"
+            page.go("/")
+        page.go("/vehicleList")
         page.update()
     
     # Función para cargar los modelos según la marca seleccionada
@@ -68,7 +70,12 @@ def formVehicle(page: ft.Page):
     
     # Cerrar conexión
     db.close_connection()
-    return [
+    return ft.Column([
+        ft.Container(
+            content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
+            on_click=lambda e: page.go("/vehicleList"),
+            visible=not isFirstUser
+        ),
         ft.Text("Datos del Vehiculo", 
             theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
             text_align="CENTER",
@@ -80,4 +87,4 @@ def formVehicle(page: ft.Page):
         combustible_dropdown, 
         submit_btn, 
         #output_text
-    ]
+    ])
