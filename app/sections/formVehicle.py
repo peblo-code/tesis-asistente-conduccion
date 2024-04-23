@@ -17,13 +17,15 @@ def formVehicle(page: ft.Page):
         
     def button_clicked(e):
         automovil = Auto(marca_dropdown.value, modelo_dropdown.value, transmision_dropdown.value, combustible_dropdown.value)
-        db.insert_vehiculo(automovil.modelo, automovil.transmision, automovil.combustible)
-        if(isFirstUser):
-            db.insert_usuario(username.value)
+        id_vehiculo = db.insert_vehiculo(automovil.modelo, automovil.transmision, automovil.combustible)
+        if(not isFirstUser):
+            db.insert_usuario(username.value, id_vehiculo)
             #output_text.value = f"El nombre de usuario es: {usuario}\nLa marca es: {automovil.marca}\nEl modelo es: {automovil.modelo}\nLa transmision es: {automovil.transmision}\nEl combustible es: {automovil.combustible}"
             page.go("/")
-        page.go("/vehicleList")
-        page.update()
+            page.update()
+        else:
+            page.go("/vehicleList")
+            page.update()
     
     # Función para cargar los modelos según la marca seleccionada
     def cargar_modelos(e):
@@ -38,6 +40,7 @@ def formVehicle(page: ft.Page):
     username = ft.TextField(
         label="Nombre y Apellido",
         width="100%",
+        visible=not isFirstUser
     )
     marca_dropdown = ft.Dropdown(
         on_change=cargar_modelos,
@@ -70,11 +73,11 @@ def formVehicle(page: ft.Page):
     
     # Cerrar conexión
     db.close_connection()
-    return ft.Column([
+    view = [
         ft.Container(
             content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
             on_click=lambda e: page.go("/vehicleList"),
-            visible=not isFirstUser
+            visible=isFirstUser
         ),
         ft.Text("Datos del Vehiculo", 
             theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
@@ -85,6 +88,8 @@ def formVehicle(page: ft.Page):
         modelo_dropdown, 
         transmision_dropdown, 
         combustible_dropdown, 
-        submit_btn, 
+        submit_btn
         #output_text
-    ])
+    ]
+
+    return view

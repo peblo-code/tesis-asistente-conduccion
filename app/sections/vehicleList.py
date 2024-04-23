@@ -6,6 +6,7 @@ def vehicleList(page: ft.Page):
     page.scroll = "adaptive"
 
     db = AutomovilesDatabase("automoviles.db")
+    vehicle_selected = db.get_vehicle_selected()
 
     def card(car_id, car_name, transmision, combustible):
         texto_transmision = "Automático"
@@ -26,15 +27,22 @@ def vehicleList(page: ft.Page):
                 display_view.visible = True
                 display_edit.visible = False
             page.update()
+
+        def update_vehicle_selected(e, vehiculo_id):
+            db.set_vehicle_selected(str(vehiculo_id))
+            page.go("/")
         
         def button_clicked(e):
             db.editar_vehiculo_por_id(car_id, modelo_dropdown.value, transmision_dropdown.value, combustible_dropdown.value)
             cargar_vehiculos()
             page.update()
 
+        car_name_text = car_name
+        if car_id == vehicle_selected:
+            car_name_text += " (seleccionado)"
         display_view = ft.Row([
             ft.Column([
-                ft.Text(car_name, theme_style=ft.TextThemeStyle.TITLE_LARGE),
+                ft.Text(car_name_text, theme_style=ft.TextThemeStyle.TITLE_LARGE),
                 ft.Row([
                     ft.Icon(name=ft.icons.CAR_CRASH_SHARP, color=ft.colors.PINK),
                     ft.Text(texto_transmision, theme_style=ft.TextThemeStyle.LABEL_LARGE),
@@ -45,15 +53,27 @@ def vehicleList(page: ft.Page):
                 ], alignment=ft.MainAxisAlignment.START),
 
             ],  horizontal_alignment=ft.CrossAxisAlignment.START, alignment=ft.MainAxisAlignment.CENTER),
-            ft.Container(
-                content=ft.Icon(name=ft.icons.EDIT),
-                bgcolor=ft.colors.DEEP_PURPLE_ACCENT_700,
-                width=50,
-                height=50,
-                border_radius=10,
-                ink=True,
-                on_click=lambda e: edit_clicked(e, display_view, display_edit)
-            )
+            ft.Column([
+                ft.Container(
+                    content=ft.Icon(name=ft.icons.EDIT),
+                    bgcolor=ft.colors.DEEP_PURPLE_ACCENT_700,
+                    width=50,
+                    height=50,
+                    border_radius=10,
+                    ink=True,
+                    on_click=lambda e: edit_clicked(e, display_view, display_edit)
+                ),
+                ft.Container(
+                    content=ft.Icon(name=ft.icons.CHECK_BOX),
+                    bgcolor=ft.colors.DEEP_PURPLE_ACCENT_700,
+                    width=50,
+                    height=50,
+                    border_radius=10,
+                    ink=True,
+                    visible=not (car_id == vehicle_selected),
+                    on_click=lambda e: update_vehicle_selected(e, car_id)
+                )
+            ])
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
 
         def cargar_modelos(e):
@@ -143,7 +163,7 @@ def vehicleList(page: ft.Page):
         height=(page.height)/4,
         border_radius=10,
         ink=True,
-        on_click=lambda e: page.go("/")
+        on_click=lambda e: page.go("/formVehicle")
     )
 
     cards=[]

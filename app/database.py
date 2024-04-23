@@ -28,7 +28,8 @@ class AutomovilesDatabase:
         
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS Usuarios (
                                 id INTEGER PRIMARY KEY,
-                                nombre TEXT NOT NULL
+                                nombre TEXT NOT NULL,
+                                vehicle_selected INTEGER NOT NULL
                             )''')
 
 
@@ -68,6 +69,24 @@ class AutomovilesDatabase:
         if count > 0:
             return True
         return False
+    
+    def get_vehicle_selected(self):
+        self.cursor.execute("SELECT vehicle_selected FROM Usuarios")
+        vehicle_selected = self.cursor.fetchone()
+        if vehicle_selected:
+            return vehicle_selected[0]
+        else:
+            return None
+        
+    def set_vehicle_selected(self, vehiculo_id):
+        connection = sqlite3.connect("automoviles.db")
+        cursor = connection.cursor()
+
+        cursor.execute("UPDATE Usuarios SET vehicle_selected = ? WHERE id = 1", vehiculo_id,)
+        connection.commit()
+
+        cursor.close()
+        connection.close()
     
     def insert_marca(self, nombre):
         connection = sqlite3.connect("automoviles.db")
@@ -112,11 +131,11 @@ class AutomovilesDatabase:
         connection.close()
 
 
-    def insert_usuario(self, nombre):
+    def insert_usuario(self, nombre, id_vehiculo):
         connection = sqlite3.connect("automoviles.db")
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO Usuarios (nombre) VALUES (?)", (nombre,))
+        cursor.execute("INSERT INTO Usuarios (nombre, vehicle_selected) VALUES (?, ?)", (nombre, id_vehiculo))
         connection.commit()
 
         cursor.close()
@@ -145,8 +164,8 @@ class AutomovilesDatabase:
 
         return modelos
     
-    def obtener_transmision_por_id_vehiculo(self, vehiculo_id):
-        self.cursor.execute("SELECT transmision FROM Vehiculos WHERE id = ?", (vehiculo_id,))
+    def obtener_transmision_por_id_vehiculo(self):
+        self.cursor.execute("SELECT transmision FROM Vehiculos WHERE id = (SELECT vehicle_selected FROM Usuarios WHERE id = 1)")
         transmision = self.cursor.fetchone()
         if transmision:
             return transmision[0]

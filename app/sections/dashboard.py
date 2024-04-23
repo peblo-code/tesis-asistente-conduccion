@@ -13,7 +13,7 @@ def dashboard(page: ft.Page):
     # Crear instancia de la base de datos
     db = AutomovilesDatabase("automoviles.db")
 
-    transmision = db.obtener_transmision_por_id_vehiculo(1)
+    transmision = db.obtener_transmision_por_id_vehiculo()
 
     # Cerrar conexión
     db.close_connection()
