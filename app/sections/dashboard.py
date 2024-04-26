@@ -5,6 +5,7 @@ import time
 from database import AutomovilesDatabase
 from functions.obdConnection import tryConnection
 from functions.shift import checkShift
+from functions.checkDriving import checkDriving
 
 def dashboard(page: ft.Page):
     page.title = "Menu principal"
@@ -19,7 +20,7 @@ def dashboard(page: ft.Page):
     db.close_connection()
 
     # Variable global para almacenar los datos OBD
-    obdData = ["-", "-", "-", "-", "-"]
+    obdData = ["-", "-", "-", "-", "-", "Desconectado"]
 
     connection = None
 
@@ -38,6 +39,7 @@ def dashboard(page: ft.Page):
     page.views.append(loading_view)
     page.update()
     connection = tryConnection()
+    obd.logger.setLevel(obd.logging.DEBUG)
 
 
     def update_data():
@@ -56,7 +58,7 @@ def dashboard(page: ft.Page):
                     return checkShift(speedValue, rpmValue, throttle, engineLoad)
                 return "-"
             
-            obdData[:] = [speedValue, rpmValue, coolantValue, elmVoltage, shiftValue()]
+            obdData[:] = [speedValue, rpmValue, coolantValue, elmVoltage, shiftValue(), checkDriving(coolantValue, rpmValue, speedValue, throttle)]
 
         # Programa la próxima actualización después de 0.5 segundos
         threading.Timer(1, update_data).start()
@@ -68,7 +70,7 @@ def dashboard(page: ft.Page):
         cardInformation = ft.Row([
             ft.Icon(name=ft.icons.INFO, ),
             ft.Column([
-                ft.Text("Información", 
+                ft.Text("Informacion", 
                     theme_style=ft.TextThemeStyle.TITLE_LARGE,
                     weight=ft.FontWeight.BOLD,
                     
@@ -154,7 +156,7 @@ def dashboard(page: ft.Page):
             print(obdData)
             # Actualizar los datos OBD
             listaItemCard = [
-                infoCard("El motor se encuentra frio, procure no exigirlo demasiado."),
+                infoCard(obdData[5]),
                 itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
                 itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
                 itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),

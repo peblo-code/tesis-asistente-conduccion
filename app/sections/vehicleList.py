@@ -182,6 +182,13 @@ def vehicleList(page: ft.Page):
                 on_click=lambda e: page.go("/home")
             ),
             ft.Container(
+                content=ft.Text("Mis vehículos", 
+                    theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
+                    text_align=ft.TextAlign.CENTER
+                ),
+                alignment=ft.alignment.center,
+            ),
+            ft.Container(
                 content=ft.Column(cards),
                 alignment = ft.alignment.center,
                 width=page.width,
