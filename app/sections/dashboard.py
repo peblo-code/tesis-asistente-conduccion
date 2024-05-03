@@ -20,7 +20,9 @@ def dashboard(page: ft.Page):
     db.close_connection()
 
     # Variable global para almacenar los datos OBD
-    obdData = ["-", "-", "-", "-", "-", "Desconectado"]
+    obdData = ["-", "-", "-", "-", "-", "Desconectado", ft.colors.BLACK]
+    tempDisplayTiming = 0
+    lastIdMsg = ""
 
     connection = None
 
@@ -39,11 +41,11 @@ def dashboard(page: ft.Page):
     page.views.append(loading_view)
     page.update()
     connection = tryConnection()
-    obd.logger.setLevel(obd.logging.DEBUG)
-
 
     def update_data():
         nonlocal obdData
+        nonlocal tempDisplayTiming
+        nonlocal lastIdMsg
         
         if connection:
             # Obtiene los valores de OBD
@@ -57,8 +59,11 @@ def dashboard(page: ft.Page):
                 if speedValue:
                     return checkShift(speedValue, rpmValue, throttle, engineLoad)
                 return "-"
-            
-            obdData[:] = [speedValue, rpmValue, coolantValue, elmVoltage, shiftValue(), checkDriving(coolantValue, rpmValue, speedValue, throttle)]
+            drivingValue = checkDriving(coolantValue, rpmValue, speedValue, throttle, tempDisplayTiming, lastIdMsg)
+            tempDisplayTiming = drivingValue[1]
+            lastIdMsg = drivingValue[3]
+
+            obdData[:] = [speedValue, rpmValue, coolantValue, elmVoltage, shiftValue(), drivingValue[0], drivingValue[2]]
 
         # Programa la próxima actualización después de 0.5 segundos
         threading.Timer(1, update_data).start()
@@ -66,7 +71,8 @@ def dashboard(page: ft.Page):
     # Llama a la función update_data para la primera actualización
     update_data()
 
-    def infoCard(dataText):
+    def infoCard(dataText, color):
+        
         cardInformation = ft.Row([
             ft.Icon(name=ft.icons.INFO, ),
             ft.Column([
@@ -99,7 +105,7 @@ def dashboard(page: ft.Page):
             ),
             margin=10,
             padding=15,
-            bgcolor=ft.colors.GREEN_700,
+            bgcolor=color,
             width=350,
             border_radius=10,
         )
@@ -156,7 +162,7 @@ def dashboard(page: ft.Page):
             print(obdData)
             # Actualizar los datos OBD
             listaItemCard = [
-                infoCard(obdData[5]),
+                infoCard(obdData[5], obdData[6]),
                 itemCard(ft.icons.ALBUM_OUTLINED, "Velocidad", "KM/H", obdData[0]), 
                 itemCard(ft.icons.SPEED, "Revoluciones", "Revoluciones por Minuto", obdData[1]),
                 itemCard(ft.icons.AIR, "Temperatura", "Grados Celcius", obdData[2]),

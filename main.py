@@ -1,9 +1,9 @@
 import flet as ft
-from sections.formVehicle import formVehicle
-from sections.dashboard import dashboard
-from sections.vehicleList import vehicleList
-from home import home
-from database import AutomovilesDatabase
+from app.sections.formVehicle import formVehicle
+from app.sections.dashboard import dashboard
+from app.sections.vehicleList import vehicleList
+from app.home import home
+from app.database import AutomovilesDatabase
 
 def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
