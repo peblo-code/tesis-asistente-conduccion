@@ -1,5 +1,5 @@
 import flet as ft
-from database import AutomovilesDatabase
+from app.database import AutomovilesDatabase
 
 def vehicleList(page: ft.Page):
     page.title = "Mis vehiculos"

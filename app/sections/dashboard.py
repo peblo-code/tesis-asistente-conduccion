@@ -2,10 +2,10 @@ import flet as ft
 import obd
 import threading
 import time
-from database import AutomovilesDatabase
-from functions.obdConnection import tryConnection
-from functions.shift import checkShift
-from functions.checkDriving import checkDriving
+from app.database import AutomovilesDatabase
+from app.functions.obdConnection import tryConnection
+from app.functions.shift import checkShift
+from app.functions.checkDriving import checkDriving
 
 def dashboard(page: ft.Page):
     page.title = "Menu principal"

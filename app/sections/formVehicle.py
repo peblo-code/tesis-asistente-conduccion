@@ -1,5 +1,5 @@
 import flet as ft
-from database import AutomovilesDatabase
+from app.database import AutomovilesDatabase
 
 def formVehicle(page: ft.Page):
     page.title = "Formulario del Usuario"
