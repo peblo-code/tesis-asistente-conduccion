@@ -7,6 +7,7 @@ def checkDriving(temp, rpm, velocidad, posicion_acelerador, flagTemp, lastidmsg)
         engine.setProperty('rate', 130)
         voices = engine.getProperty('voices')
         engine.setProperty('voice', voices[0].id)
+        engine.setProperty('volume',1.0)
         engine.say(text)
         engine.runAndWait()
     msg = "Todo esta correcto."

@@ -47,7 +47,7 @@ class AutomovilesDatabase:
 
             # Insertar modelos vinculados a las marcas
             modelos = {
-                "Toyota": ["Corolla", "Premio", "Allion"],
+                "Toyota": ["Corolla", "Premio", "Allion", "Auris"],
                 "Nissan": ["Tida", "Sunny", "Patrol"],
                 "Mitsubishi": ["L200", "Lancer", "Mirage"]
             }

@@ -4,6 +4,7 @@ from app.sections.dashboard import dashboard
 from app.sections.vehicleList import vehicleList
 from app.home import home
 from app.database import AutomovilesDatabase
+import time
 
 def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -33,7 +34,10 @@ def main(page: ft.Page):
             page.views.append(
                 ft.View(
                     "/formVehicle",
-                    formVehicle(page)
+                    [
+                        formVehicle(page)
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 )
             )
         if page.route == "/dashboard":

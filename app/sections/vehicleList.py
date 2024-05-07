@@ -40,7 +40,7 @@ def vehicleList(page: ft.Page):
         car_name_text = car_name
         if car_id == vehicle_selected:
             car_name_text += " (seleccionado)"
-        display_view = ft.Row([
+        display_view = ft.Column([
             ft.Column([
                 ft.Text(car_name_text, theme_style=ft.TextThemeStyle.TITLE_LARGE),
                 ft.Row([
@@ -53,7 +53,7 @@ def vehicleList(page: ft.Page):
                 ], alignment=ft.MainAxisAlignment.START),
 
             ],  horizontal_alignment=ft.CrossAxisAlignment.START, alignment=ft.MainAxisAlignment.CENTER),
-            ft.Column([
+            ft.Row([
                 ft.Container(
                     content=ft.Icon(name=ft.icons.EDIT),
                     bgcolor=ft.colors.DEEP_PURPLE_ACCENT_700,
@@ -73,8 +73,8 @@ def vehicleList(page: ft.Page):
                     visible=not (car_id == vehicle_selected),
                     on_click=lambda e: update_vehicle_selected(e, car_id)
                 )
-            ])
-        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+            ], alignment=ft.MainAxisAlignment.END, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
         def cargar_modelos(e):
             marca_seleccionada = marca_dropdown.value
@@ -116,7 +116,7 @@ def vehicleList(page: ft.Page):
             ],
             value=int(car_selected[3])
         )
-        display_edit = ft.Row([
+        display_edit = ft.Column([
             ft.Column([
                 marca_dropdown, 
                 modelo_dropdown, 
@@ -133,7 +133,7 @@ def vehicleList(page: ft.Page):
                 ink=True,
                 on_click=lambda e: edit_clicked(e,display_view, display_edit)
             )
-        ], visible=False, alignment=ft.MainAxisAlignment.CENTER, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+        ], visible=False, alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
         return ft.Container(
             content=ft.Column(controls=[display_view, display_edit]),
@@ -142,7 +142,7 @@ def vehicleList(page: ft.Page):
             theme=ft.Theme(color_scheme_seed=ft.colors.INDIGO),
             theme_mode=ft.ThemeMode.DARK,
             bgcolor=ft.colors.SURFACE_VARIANT,
-            width=(page.width)/2,
+            width=(page.width),
             border_radius=10,
             alignment=ft.alignment.center
         )
@@ -159,7 +159,7 @@ def vehicleList(page: ft.Page):
         theme=ft.Theme(color_scheme_seed=ft.colors.INDIGO),
         theme_mode=ft.ThemeMode.DARK,
         bgcolor=ft.colors.SURFACE_VARIANT,
-        width=(page.width)/2,
+        width=(page.width),
         height=(page.height)/4,
         border_radius=10,
         ink=True,
@@ -176,7 +176,8 @@ def vehicleList(page: ft.Page):
         cards.append(card_add)
     cargar_vehiculos()
     
-    view = ft.Column([
+    view = ft.SafeArea(
+        ft.Column([
             ft.Container(
                 content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
                 on_click=lambda e: page.go("/home")
@@ -191,8 +192,9 @@ def vehicleList(page: ft.Page):
             ft.Container(
                 content=ft.Column(cards),
                 alignment = ft.alignment.center,
-                width=page.width,
+                width=page.width - 20,
             )
         ])
+    )
     
     return view

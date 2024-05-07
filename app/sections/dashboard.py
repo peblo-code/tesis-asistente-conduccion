@@ -10,6 +10,10 @@ from app.functions.checkDriving import checkDriving
 def dashboard(page: ft.Page):
     page.title = "Menu principal"
     page.scroll = "adaptive"
+    bipAudio = ft.Audio(
+        src='../app/assets/2023-10-27 16-22-21.mp3'
+    )
+    page.overlay.append(bipAudio)
 
     # Crear instancia de la base de datos
     db = AutomovilesDatabase("automoviles.db")
@@ -49,15 +53,15 @@ def dashboard(page: ft.Page):
         
         if connection:
             # Obtiene los valores de OBD
-            speedValue = connection.query(obd.commands.SPEED).value.magnitude 
-            rpmValue = connection.query(obd.commands.RPM).value.magnitude
-            coolantValue = connection.query(obd.commands.COOLANT_TEMP).value.magnitude
-            throttle = connection.query(obd.commands.THROTTLE_POS).value.magnitude
-            engineLoad = connection.query(obd.commands.ENGINE_LOAD).value.magnitude
-            elmVoltage = connection.query(obd.commands.ELM_VOLTAGE).value.magnitude
+            speedValue = int(connection.query(obd.commands.SPEED).value.magnitude) 
+            rpmValue = int(connection.query(obd.commands.RPM).value.magnitude)
+            coolantValue = int(connection.query(obd.commands.COOLANT_TEMP).value.magnitude)
+            throttle = int(connection.query(obd.commands.THROTTLE_POS).value.magnitude)
+            engineLoad = int(connection.query(obd.commands.ENGINE_LOAD).value.magnitude)
+            elmVoltage = int(connection.query(obd.commands.ELM_VOLTAGE).value.magnitude)
             def shiftValue():
                 if speedValue:
-                    return checkShift(speedValue, rpmValue, throttle, engineLoad)
+                    return checkShift(speedValue, rpmValue, throttle, engineLoad, bipAudio)
                 return "-"
             drivingValue = checkDriving(coolantValue, rpmValue, speedValue, throttle, tempDisplayTiming, lastIdMsg)
             tempDisplayTiming = drivingValue[1]
@@ -144,7 +148,7 @@ def dashboard(page: ft.Page):
                         width=80,
                         height=50,
                     )
-                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
             ),
             margin=10,
             padding=15,
@@ -173,7 +177,8 @@ def dashboard(page: ft.Page):
 
             # Crear una nueva vista con las tarjetas actualizadas
             new_view = ft.View("/dashboard", [
-                ft.Container(
+                ft.SafeArea(
+                    ft.Container(
                     content=ft.Column([
                          ft.Container(
                             content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
@@ -187,7 +192,8 @@ def dashboard(page: ft.Page):
                             alignment=ft.alignment.center
                         )
                     ],)
-                ),
+                    ),
+                )
             ], scroll=ft.ScrollMode.ALWAYS,)
 
             # Actualizar la vista en la página

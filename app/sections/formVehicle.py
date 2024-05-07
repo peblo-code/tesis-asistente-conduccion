@@ -73,23 +73,25 @@ def formVehicle(page: ft.Page):
     
     # Cerrar conexión
     db.close_connection()
-    view = [
-        ft.Container(
-            content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
-            on_click=lambda e: page.go("/vehicleList"),
-            visible=isFirstUser
-        ),
-        ft.Text("Datos del Vehiculo", 
-            theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
-            text_align="CENTER",
-        ),
-        username,
-        marca_dropdown, 
-        modelo_dropdown, 
-        transmision_dropdown, 
-        combustible_dropdown, 
-        submit_btn
-        #output_text
-    ]
+    view = ft.SafeArea(
+        ft.Column([
+            ft.Container(
+                content=ft.Icon(name=ft.icons.ARROW_BACK, size=50),
+                on_click=lambda e: page.go("/vehicleList"),
+                visible=isFirstUser
+            ),
+            ft.Text("Datos del Vehiculo", 
+                theme_style=ft.TextThemeStyle.DISPLAY_MEDIUM,
+                text_align="CENTER",
+            ),
+            username,
+            marca_dropdown, 
+            modelo_dropdown, 
+            transmision_dropdown, 
+            combustible_dropdown, 
+            submit_btn
+            #output_text
+        ])
+    )
 
     return view
